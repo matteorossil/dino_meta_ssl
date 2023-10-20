@@ -15,6 +15,7 @@ import os
 import argparse
 import json
 from pathlib import Path
+import sys
 
 import torch
 from torch import nn
@@ -136,7 +137,7 @@ def eval_linear(args):
             log_stats = {**{k: v for k, v in log_stats.items()},
                          **{f'test_{k}': v for k, v in test_stats.items()}}
         if utils.is_main_process():
-            with (Path(args.output_dir) / "log.txt").open("a") as f:
+            with (Path(args.output_dir) / "eval_log.txt").open("a") as f:
                 f.write(json.dumps(log_stats) + "\n")
             save_dict = {
                 "epoch": epoch + 1,
@@ -145,7 +146,7 @@ def eval_linear(args):
                 "scheduler": scheduler.state_dict(),
                 "best_acc": best_acc,
             }
-            torch.save(save_dict, os.path.join(args.output_dir, "checkpoint.pth.tar"))
+            torch.save(save_dict, os.path.join(args.output_dir, "eval_checkpoint.pth.tar"))
     print("Training of the supervised linear classifier on frozen features completed.\n"
                 "Top-1 test accuracy: {acc:.1f}".format(acc=best_acc))
 

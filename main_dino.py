@@ -34,7 +34,7 @@ import utils
 import vision_transformer as vits
 from vision_transformer import DINOHead
 
-#from torch.utils.tensorboard import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 
 torchvision_archs = sorted(name for name in torchvision_models.__dict__
     if name.islower() and not name.startswith("__")
@@ -122,7 +122,7 @@ def get_args_parser():
     parser.add_argument('--data_path', default='/path/to/imagenet/train/', type=str,
         help='Please specify path to the ImageNet training data.')
     parser.add_argument('--output_dir', default=".", type=str, help='Path to save logs and checkpoints.')
-    parser.add_argument('--saveckp_freq', default=20, type=int, help='Save checkpoint every x epochs.')
+    parser.add_argument('--saveckp_freq', default=5, type=int, help='Save checkpoint every x epochs.')
     parser.add_argument('--seed', default=0, type=int, help='Random seed.')
     parser.add_argument('--num_workers', default=10, type=int, help='Number of data loading workers per GPU.')
     parser.add_argument("--dist_url", default="env://", type=str, help="""url used to set up
@@ -253,10 +253,10 @@ def train_dino(args):
                                                args.epochs, len(data_loader))
     print(f"Loss, optimizer and schedulers ready.")
 
-    #if utils.is_main_process():
-        #args.log_writer = SummaryWriter(log_dir=args.output_dir)
-    #else:
-        #args.log_writer = None
+    if utils.is_main_process():
+        args.log_writer = SummaryWriter(log_dir=args.output_dir)
+    else:
+        args.log_writer = None
 
     # ============ optionally resume training ... ============
     to_restore = {"epoch": 0}

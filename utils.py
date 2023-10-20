@@ -85,7 +85,8 @@ def load_pretrained_weights(model, pretrained_weights, checkpoint_key, model_nam
         print("Please use the `--pretrained_weights` argument to indicate the path of the checkpoint to evaluate.")
         url = None
         if model_name == "vit_small" and patch_size == 16:
-            url = "dino_deitsmall16_pretrain/dino_deitsmall16_pretrain.pth"
+            #url = "dino_deitsmall16_pretrain/dino_deitsmall16_pretrain.pth"
+            url = None
         elif model_name == "vit_small" and patch_size == 8:
             url = "dino_deitsmall8_pretrain/dino_deitsmall8_pretrain.pth"
         elif model_name == "vit_base" and patch_size == 16:
@@ -473,6 +474,7 @@ def init_distributed_mode(args):
         args.gpu = int(os.environ['LOCAL_RANK'])
     # launched with submitit on a slurm cluster
     elif 'SLURM_PROCID' in os.environ:
+        args.world_size = int(os.environ['WORLD_SIZE'])
         args.rank = int(os.environ['SLURM_PROCID'])
         args.gpu = args.rank % torch.cuda.device_count()
     # launched naively with `python main_dino.py`
