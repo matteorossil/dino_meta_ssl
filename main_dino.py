@@ -34,7 +34,7 @@ import utils
 import vision_transformer as vits
 from vision_transformer import DINOHead
 
-from torch.utils.tensorboard import SummaryWriter
+#from torch.utils.tensorboard import SummaryWriter
 
 torchvision_archs = sorted(name for name in torchvision_models.__dict__
     if name.islower() and not name.startswith("__")
@@ -253,10 +253,10 @@ def train_dino(args):
                                                args.epochs, len(data_loader))
     print(f"Loss, optimizer and schedulers ready.")
 
-    if utils.is_main_process():
-        args.log_writer = SummaryWriter(log_dir=args.output_dir)
-    else:
-        args.log_writer = None
+    #if utils.is_main_process():
+        #args.log_writer = SummaryWriter(log_dir=args.output_dir)
+    #else:
+        #args.log_writer = None
 
     # ============ optionally resume training ... ============
     to_restore = {"epoch": 0}
